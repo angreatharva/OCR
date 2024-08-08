@@ -27,17 +27,20 @@ class _InbuiltCameraViewState extends State<InbuiltCameraView> {
 
   @override
   void initState() {
+    print('InbuiltCameraView init');
     super.initState();
     initializeCamera();
   }
 
   Future<void> initializeCamera() async {
+    print('initializeCamera');
     await cameraService.initialize();
     setState(() {});
     startFrameAnalysis();
   }
 
   void startFrameAnalysis() {
+    print('startFrameAnalysis');
     cameraService.controller?.startImageStream((image) {
       if (!_processing) {
         _processing = true;
@@ -47,6 +50,7 @@ class _InbuiltCameraViewState extends State<InbuiltCameraView> {
   }
 
   Future<void> _analyzeFrame(cam.CameraImage image) async {
+    print('_analyzeFrame');
     final bytes = _concatenatePlanes(image.planes);
     final imageWidth = image.width;
     final imageHeight = image.height;
@@ -60,6 +64,7 @@ class _InbuiltCameraViewState extends State<InbuiltCameraView> {
   }
 
   Uint8List _concatenatePlanes(List<cam.Plane> planes) {
+    print('_concatenatePlanes');
     final WriteBuffer allBytes = WriteBuffer();
     for (cam.Plane plane in planes) {
       allBytes.putUint8List(plane.bytes);
@@ -68,6 +73,7 @@ class _InbuiltCameraViewState extends State<InbuiltCameraView> {
   }
 
   bool _hasFrameChanged(Uint8List currentFrameBytes) {
+    print('_hasFrameChanged');
     if (_lastFrameBytes == null) return true;
     if (_lastFrameBytes!.length != currentFrameBytes.length) return true;
 
@@ -80,20 +86,8 @@ class _InbuiltCameraViewState extends State<InbuiltCameraView> {
     return false;
   }
 
-  Future<void> performOcr() async {
-    final imagePath = await captureImage(); // Implement this method to capture image
-    if (imagePath != null) {
-      String cameraOcrText = await ocrService.performOcr(imagePath);
-      String assetOcrText = await performOcrOnAssetImage();
-
-      cameraController.updateOcrResult(cameraOcrText);
-      cameraController.compareOcrResults(cameraOcrText, assetOcrText,);
-    } else {
-      cameraController.updateOcrResult("Error capturing image");
-    }
-  }
-
   Future<String> captureImage() async {
+    print('captureImage');
     try {
       final tempDir = await getTemporaryDirectory();
       final xFile = await cameraService.controller?.takePicture();
@@ -110,17 +104,43 @@ class _InbuiltCameraViewState extends State<InbuiltCameraView> {
     }
   }
 
-  Future<Uint8List> loadImageFromAssets() async {
-    final ByteData data = await rootBundle.load('assets/images/imageS1.jpg');
+  Future<void> performOcr() async {
+    print('performOcr');
+    if(cameraController.no.value <= 10){
+      final imagePath = await captureImage(); // Implement this method to capture image
+      if (imagePath != null) {
+        String cameraOcrText = await ocrService.performOcr(imagePath);
+        String assetOcrText = await performOcrOnAssetImage();
+
+        cameraController.updateOcrResult(cameraOcrText);
+        cameraController.compareOcrResults(cameraOcrText, assetOcrText,);
+      } else {
+        cameraController.updateOcrResult("Error capturing image");
+      }
+    }
+    else{
+      cameraController.updateOcrResult("Scanning Complete");
+    }
+
+  }
+
+  Future<Uint8List> loadImageFromAssets(standard,no) async {
+    print('loadImageFromAssets');
+    print('loadImageFromAssets: ${'assets/$standard/BOOK${cameraController.no.value}.jpg'}');
+    final ByteData data = await rootBundle.load('assets/$standard/BOOK${cameraController.no.value}.jpg');
+    cameraController.bookNo.value = 'BOOK$no';
     return data.buffer.asUint8List();
   }
 
   Future<String> performOcrOnAssetImage() async {
-    final imageBytes = await loadImageFromAssets();
+    print('performOcrOnAssetImage');
+    final imageBytes = await loadImageFromAssets('Standard1',cameraController.no.value);
     final tempDir = await getTemporaryDirectory();
     final tempFile = File('${tempDir.path}/temp_image.jpg');
     await tempFile.writeAsBytes(imageBytes);
-    return await ocrService.performOcr(tempFile.path);
+    final ocrAssetImage = await ocrService.performOcr(tempFile.path);
+    print('ocrAssetImage: ${ocrAssetImage}');
+    return ocrAssetImage;
   }
 
   Future<String> getColorCode(String imagePath) async {
@@ -179,7 +199,9 @@ class _InbuiltCameraViewState extends State<InbuiltCameraView> {
                   height: Get.height * 0.2,
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    child: Text('OCR Result: ${cameraController.ocrResult}\nAssets OCR Result: ${cameraController.matchOcrResult.value}'),
+                    child: Text(
+                        'Assets OCR Result: ${cameraController.matchOcrResult.value }\n'
+                        'OCR Result: ${cameraController.ocrResult}\n'),
                   ),
                 )),
               ],

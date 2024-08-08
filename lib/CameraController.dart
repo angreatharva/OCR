@@ -33,6 +33,20 @@ class CameraController extends GetxController {
   var fiveColorScanned = false.obs;
   var fiveScanned = false.obs;
 
+  var bookNo = ''.obs;
+  var no = 1.obs;
+
+  var oneBookScanned = false.obs;
+  var twoBookScanned = false.obs;
+  var threeBookScanned = false.obs;
+  var fourBookScanned = false.obs;
+  var fiveBookScanned = false.obs;
+  var sixBookScanned = false.obs;
+  var sevenBookScanned = false.obs;
+  var eightBookScanned = false.obs;
+  var nineBookScanned = false.obs;
+  var tenBookScanned = false.obs;
+
   void updateOcrResult(String result) {
     ocrResult.value = result;
     print('ocrResult.value: ${ocrResult.value}');
@@ -50,9 +64,61 @@ class CameraController extends GetxController {
     double similarity = cameraOcrText.similarityTo(assetOcrText);
     double matchPercentage = similarity * 100;
 
-    if (matchPercentage >= 80) {
+    if (matchPercentage >= 40) {
       matchOcrResult.value = 'OCR results match! (${matchPercentage.toStringAsFixed(2)}% similarity)';
       print('OCR results match! (${matchPercentage.toStringAsFixed(2)}% similarity)');
+
+      if(!oneBookScanned.value && bookNo.value.toLowerCase() == 'book1'){
+        oneBookScanned.value = true;
+        no.value ++;
+        return;
+      }
+      else if(!twoBookScanned.value && bookNo.value.toLowerCase() == 'book2'){
+        twoBookScanned.value = true;
+        no.value ++;
+        return;
+      }
+      else if(!threeBookScanned.value && bookNo.value.toLowerCase() == 'book3'){
+        threeBookScanned.value = true;
+        no.value ++;
+        return;
+      }
+      else if(!fourBookScanned.value && bookNo.value.toLowerCase() == 'book4'){
+        fourBookScanned.value = true;
+        no.value ++;
+        return;
+      }
+      else if(!fiveBookScanned.value && bookNo.value.toLowerCase() == 'book5'){
+        fiveBookScanned.value = true;
+        no.value ++;
+        return;
+      }
+      else if(!sixBookScanned.value && bookNo.value.toLowerCase() == 'book6'){
+        sixBookScanned.value = true;
+        no.value ++;
+        return;
+      }
+      else if(!sevenBookScanned.value && bookNo.value.toLowerCase() == 'book7'){
+        sevenBookScanned.value = true;
+        no.value ++;
+        return;
+      }
+      else if(!eightBookScanned.value && bookNo.value.toLowerCase() == 'book8'){
+        eightBookScanned.value = true;
+        no.value ++;
+        return;
+      }
+      else if(!nineBookScanned.value && bookNo.value.toLowerCase() == 'book9'){
+        nineBookScanned.value = true;
+        no.value ++;
+        return;
+      }
+      else if(!tenBookScanned.value && bookNo.value.toLowerCase() == 'book10'){
+        tenBookScanned.value = true;
+        no.value ++;
+        return;
+      }
+
     } else {
       matchOcrResult.value = 'OCR results do not match. (${matchPercentage.toStringAsFixed(2)}% similarity)';
       print('OCR results do not match. (${matchPercentage.toStringAsFixed(2)}% similarity)');

@@ -2,7 +2,7 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'dart:io';
 
 class OcrService {
-  final textRecognizer = TextRecognizer();
+  final textRecognizer = TextRecognizer(script: TextRecognitionScript.devanagiri); // Set script to Devanagari for Hindi and Marathi
 
   Future<String> performOcr(String filePath) async {
     try {
