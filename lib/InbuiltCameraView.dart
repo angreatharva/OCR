@@ -183,6 +183,21 @@ class _InbuiltCameraViewState extends State<InbuiltCameraView> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          ElevatedButton(onPressed: (){
+            cameraController.bookNo.value = '';
+            cameraController.no.value = 1;
+
+            cameraController.oneBookScanned.value = false;
+            cameraController.twoBookScanned.value = false;
+            cameraController.threeBookScanned.value = false;
+            cameraController.fourBookScanned.value = false;
+            cameraController.fiveBookScanned.value = false;
+            cameraController.sixBookScanned.value = false;
+            cameraController.sevenBookScanned.value = false;
+            cameraController.eightBookScanned.value = false;
+            cameraController.nineBookScanned.value = false;
+            cameraController.tenBookScanned.value = false;
+          }, child: Text('Reset')),
           Expanded(
             flex: 2,
             child: cameraService.controller == null || !cameraService.controller!.value.isInitialized
@@ -207,6 +222,33 @@ class _InbuiltCameraViewState extends State<InbuiltCameraView> {
               ],
             ),
           ),
+          Obx(() {
+            if (cameraController.tenBookScanned.value) {
+              return Text('10 Scanned');
+            } else if (cameraController.nineBookScanned.value) {
+              return Text('9 Scanned');
+            } else if (cameraController.eightBookScanned.value) {
+              return Text('8 Scanned');
+            } else if (cameraController.sevenBookScanned.value) {
+              return Text('7 Scanned');
+            } else if (cameraController.sixBookScanned.value) {
+              return Text('6 Scanned');
+            } else if (cameraController.fiveBookScanned.value) {
+              return Text('5 Scanned');
+            } else if (cameraController.fourBookScanned.value) {
+              return Text('4 Scanned');
+            } else if (cameraController.threeBookScanned.value) {
+              return Text('3 Scanned');
+            } else if (cameraController.twoBookScanned.value) {
+              return Text('2 Scanned');
+            } else if (cameraController.oneBookScanned.value) {
+              return Text('1 Scanned');
+            } else {
+              return Text('Nothing Scanned');
+            }
+          })
+
+
         ],
       ),
     );
