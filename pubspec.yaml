@@ -44,6 +44,7 @@ dependencies:
   string_similarity: any
   video_player: any
   http: any
+  flutter_vlc_player: any
 #  fijkplayer:
 #  better_player: any
 

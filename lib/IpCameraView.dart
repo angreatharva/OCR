@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'CameraController.dart';
 import 'InbuiltCameraView.dart';
 import 'OcrService.dart';
 import 'RtspService.dart';
 import 'dart:io';
-import 'package:image/image.dart' as img;
-import 'dart:io';
-import 'package:flutter/services.dart';
 import 'dart:typed_data';
-
 
 class IpCameraView extends StatefulWidget {
   @override
@@ -21,23 +18,41 @@ class _IpCameraViewState extends State<IpCameraView> {
   final OcrService ocrService = OcrService();
   final CameraController cameraController = Get.put(CameraController());
 
+  VlcPlayerController? _vlcPlayerController;
   Uint8List? _lastFrameBytes;
   bool _processing = false;
 
   @override
   void initState() {
     super.initState();
+    initializePlayer();
     startStreamingAndAnalysis();
   }
 
-  Future<void> startStreamingAndAnalysis() async {
+  void initializePlayer() {
     String username = 'admin';
-    String password = 'admin@123'; // URL-encoded password
-    String ipAddress = '192.168.2.86'; // Replace with your camera's IP address
+    String password = 'admin@123';
+    String ipAddress = '192.168.2.86';
     String rtspUrl = 'rtsp://$username:$password@$ipAddress/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif';
 
+    _vlcPlayerController = VlcPlayerController.network(
+      rtspUrl,
+      autoPlay: true,
+      options: VlcPlayerOptions(
+        /*advanced: VlcAdvancedOptions(
+            [
+          '--network-caching=100', // Lower caching to reduce latency
+          '--rtsp-tcp', // Use TCP, change to UDP if needed
+           ]
+        ),*/
+      ),
+    );
+  }
+
+
+  Future<void> startStreamingAndAnalysis() async {
     try {
-      await rtspService.startStreaming(rtspUrl);
+      await rtspService.startStreaming('rtsp://admin:admin@123@192.168.2.86/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif');
 
       while (mounted) {
         await Future.delayed(Duration(milliseconds: 100)); // Adjust delay as necessary
@@ -59,7 +74,6 @@ class _IpCameraViewState extends State<IpCameraView> {
       cameraController.updateOcrResult("Error during streaming and OCR");
     }
   }
-
   bool _hasFrameChanged(Uint8List currentFrameBytes) {
     if (_lastFrameBytes == null) return true;
     if (_lastFrameBytes!.length != currentFrameBytes.length) return true;
@@ -98,18 +112,24 @@ class _IpCameraViewState extends State<IpCameraView> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          children: [
-            ElevatedButton(
-              onPressed: () async {
-                startStreamingAndAnalysis();
-              },
-              child: Text('Start Streaming and OCR'),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: VlcPlayer(
+              controller: _vlcPlayerController!,
+              aspectRatio: 16 / 9,
+              placeholder: Center(child: CircularProgressIndicator()),
             ),
-            Obx(() => Text('OCR Result: ${cameraController.ocrResult}')),
-          ],
-        ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              startStreamingAndAnalysis();
+            },
+            child: Text('Start Streaming and OCR'),
+          ),
+          Obx(() => Text('OCR Result: ${cameraController.ocrResult}')),
+        ],
       ),
     );
   }
@@ -118,6 +138,7 @@ class _IpCameraViewState extends State<IpCameraView> {
   void dispose() {
     rtspService.stopStreaming();
     ocrService.dispose();
+    _vlcPlayerController?.dispose();
     super.dispose();
   }
 }
