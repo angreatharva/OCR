@@ -33,13 +33,13 @@ class IpCameraView extends StatelessWidget {
                 String username = 'admin';
                 String password = 'admin@123'; // URL-encoded password
                 String ipAddress = '192.168.2.86'; // Replace with your camera's IP address
-                String rtspUrl = 'rtsp://$username:$password@$ipAddress/stream';
-
+                String rtspUrl = 'rtsp://$username:$password@$ipAddress/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif';
                 try {
+                  print("rtspUrl: ${rtspUrl}");
                   await rtspService.startStreaming(rtspUrl); // Start streaming
 
                   // Wait for a brief moment to ensure a frame is captured
-                  await Future.delayed(Duration(seconds: 15)); // Adjust as necessary
+                  await Future.delayed(Duration(seconds: 2)); // Adjust as necessary
 
                   // Construct the path for the captured frame
                   String framePath = '${await rtspService.getOutputDirectory()}/output_0001.png';

@@ -30,8 +30,15 @@ class RtspService {
 
     try {
       _subscription = _flutterFFmpeg
-          .executeWithArguments(['-loglevel', 'debug', '-i', rtspUrl, '-timeout', '10000000', '-vf', 'fps=1/1', outputPath])
-          .asStream()
+          .executeWithArguments([
+        '-loglevel', 'debug',
+        '-rtsp_transport', 'tcp',  // Force TCP (more reliable than UDP)
+        '-i', rtspUrl,
+        '-timeout', '30000000',  // Increased timeout to 30 seconds
+        '-vf', 'fps=1/1',
+        '-frames:v', '1',  // Capture only one frame
+        outputPath
+      ]).asStream()
           .listen(
             (rc) {
           print("FFmpeg process exited with rc: $rc");
