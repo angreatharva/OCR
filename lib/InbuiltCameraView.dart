@@ -113,7 +113,7 @@ class _InbuiltCameraViewState extends State<InbuiltCameraView> {
         String assetOcrText = await performOcrOnAssetImage();
 
         cameraController.updateOcrResult(cameraOcrText);
-        cameraController.compareOcrResults(cameraOcrText, assetOcrText,);
+        cameraController.compareOcrResults(cameraOcrText, assetOcrText);
       } else {
         cameraController.updateOcrResult("Error capturing image");
       }

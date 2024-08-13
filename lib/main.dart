@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'IpCameraView.dart';
 import 'VideoStreamPage.dart';
@@ -15,7 +16,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: IpCameraView(),  // Start with IP camera view
+      home: IpCameraView(),
+      builder: EasyLoading.init(),
     );
   }
 }

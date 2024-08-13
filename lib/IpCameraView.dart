@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'OcrService.dart';
@@ -64,9 +65,45 @@ class _IpCameraViewState extends State<IpCameraView> {
   }
 
   Future<void> performOcr(String filePath) async {
-    String ocrText = await ocrService.performOcr(filePath);
-    cameraController.updateOcrResult(ocrText);
+    print('performOcr in IpCameraView');
+
+    // Perform OCR on the IP camera image
+    String ipCameraOcrText = await ocrService.performOcr(filePath);
+
+    // Perform OCR on the asset image (you can use a similar method as in InbuiltCameraView)
+    String assetOcrText = await performOcrOnAssetImage();
+
+    // Update OCR result in the controller
+    cameraController.updateOcrResult(ipCameraOcrText);
+
+    // Compare the OCR results
+    cameraController.compareOcrResults(ipCameraOcrText, assetOcrText);
   }
+
+  Future<String> performOcrOnAssetImage() async {
+    print('performOcrOnAssetImage in IpCameraView');
+
+    // Assuming you're using the same asset images as in InbuiltCameraView
+    final imageBytes = await loadImageFromAssets('Standard1', cameraController.no.value);
+    final tempDir = await getTemporaryDirectory();
+    final tempFile = File('${tempDir.path}/temp_image_ip.jpg');
+    await tempFile.writeAsBytes(imageBytes);
+
+    final ocrAssetImage = await ocrService.performOcr(tempFile.path);
+    print('ocrAssetImage in IpCameraView: $ocrAssetImage');
+
+    return ocrAssetImage;
+  }
+
+  Future<Uint8List> loadImageFromAssets(String standard, int no) async {
+    print('loadImageFromAssets in IpCameraView');
+
+    final ByteData data = await rootBundle.load('assets/$standard/BOOK$no.jpg');
+    cameraController.bookNo.value = 'BOOK$no';
+
+    return data.buffer.asUint8List();
+  }
+
 
   @override
   Widget build(BuildContext context) {
