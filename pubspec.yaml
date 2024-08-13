@@ -45,6 +45,8 @@ dependencies:
   video_player: any
   http: any
   flutter_vlc_player: any
+  flutter_easyloading: any
+  google_mlkit_document_scanner: any
 #  fijkplayer:
 #  better_player: any
 

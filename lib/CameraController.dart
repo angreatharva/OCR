@@ -59,7 +59,9 @@ class CameraController extends GetxController {
 
   void compareOcrResults(String cameraOcrText, String assetOcrText) {
     print('cameraOcrText: $cameraOcrText');
+    print('=====================================');
     print('assetOcrText: $assetOcrText');
+    print('=====================================');
 
     double similarity = cameraOcrText.similarityTo(assetOcrText);
     double matchPercentage = similarity * 100;

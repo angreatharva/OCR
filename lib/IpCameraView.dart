@@ -29,8 +29,9 @@ class _IpCameraViewState extends State<IpCameraView> {
   void initializePlayer() {
     String username = 'admin';
     String password = 'admin@123';
-    String ipAddress = '192.168.2.86';
-    String rtspUrl = 'rtsp://$username:$password@$ipAddress/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif';
+    // String ipAddress = '192.168.2.86';//reception cam
+    String ipAddress = '192.168.2.87';//test cam
+    String rtspUrl = 'rtsp://$username:$password@$ipAddress/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif'; // reception cam
 
     _vlcPlayerController = VlcPlayerController.network(
       rtspUrl,
@@ -114,14 +115,56 @@ class _IpCameraViewState extends State<IpCameraView> {
       body: Column(
         children: [
           Expanded(
-            flex: 2,
+            flex: 1,
             child: VlcPlayer(
               controller: _vlcPlayerController!,
               aspectRatio: 16 / 9,
               placeholder: Center(child: CircularProgressIndicator()),
             ),
           ),
-          Obx(() => Text('OCR Result: ${cameraController.ocrResult}')),
+          Expanded(
+            flex: 1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Obx(() => Container(
+                  width: Get.width,
+                  height: Get.height * 0.2,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Text(
+                        'Assets OCR Result: ${cameraController.matchOcrResult.value }\n'
+                            'OCR Result: ${cameraController.ocrResult}\n'),
+                  ),
+                )),
+              ],
+            ),
+          ),
+          Obx(() {
+            if (cameraController.tenBookScanned.value) {
+              return Text('10 Scanned');
+            } else if (cameraController.nineBookScanned.value) {
+              return Text('9 Scanned');
+            } else if (cameraController.eightBookScanned.value) {
+              return Text('8 Scanned');
+            } else if (cameraController.sevenBookScanned.value) {
+              return Text('7 Scanned');
+            } else if (cameraController.sixBookScanned.value) {
+              return Text('6 Scanned');
+            } else if (cameraController.fiveBookScanned.value) {
+              return Text('5 Scanned');
+            } else if (cameraController.fourBookScanned.value) {
+              return Text('4 Scanned');
+            } else if (cameraController.threeBookScanned.value) {
+              return Text('3 Scanned');
+            } else if (cameraController.twoBookScanned.value) {
+              return Text('2 Scanned');
+            } else if (cameraController.oneBookScanned.value) {
+              return Text('1 Scanned');
+            } else {
+              return Text('Nothing Scanned');
+            }
+          })
         ],
       ),
     );
