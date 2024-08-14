@@ -23,22 +23,40 @@ class _IpCameraViewState extends State<IpCameraView> {
   void initState() {
     super.initState();
     initializePlayer();
-    startFrameAnalysis();
+    // startFrameAnalysis();
   }
 
   void initializePlayer() {
     String username = 'admin';
     String password = 'admin@123';
-    // String ipAddress = '192.168.2.86';//reception cam
-    String ipAddress = '192.168.2.87';//test cam
-    String rtspUrl = 'rtsp://$username:$password@$ipAddress/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif'; // reception cam
+    String ipAddress = '192.168.2.87';
+    String rtspUrl = 'rtsp://$username:$password@$ipAddress/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif';
 
     _vlcPlayerController = VlcPlayerController.network(
       rtspUrl,
       autoPlay: true,
-      options: VlcPlayerOptions(),
+      options: VlcPlayerOptions(
+        advanced: VlcAdvancedOptions([
+          VlcAdvancedOptions.clockJitter(100),
+          VlcAdvancedOptions.clockSynchronization(1),
+          VlcAdvancedOptions.fileCaching(100),
+          VlcAdvancedOptions.liveCaching(50),
+          VlcAdvancedOptions.networkCaching(100),
+        ]),
+        rtp: VlcRtpOptions([
+          VlcRtpOptions.rtpOverRtsp(false),
+        ]),
+        sout: VlcStreamOutputOptions([
+          VlcStreamOutputOptions.soutMuxCaching(100),
+        ]),
+        video: VlcVideoOptions([
+          VlcVideoOptions.dropLateFrames(true),
+          VlcVideoOptions.skipFrames(true),
+        ]),
+      ),
     );
   }
+/*
 
   void startFrameAnalysis() {
     Future.delayed(Duration(seconds: 1), analyzeFrame);
@@ -105,6 +123,7 @@ class _IpCameraViewState extends State<IpCameraView> {
     return data.buffer.asUint8List();
   }
 
+*/
 
   @override
   Widget build(BuildContext context) {

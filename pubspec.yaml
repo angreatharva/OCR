@@ -47,6 +47,9 @@ dependencies:
   flutter_vlc_player: any
   flutter_easyloading: any
   google_mlkit_document_scanner: any
+  opencv_dart : any
+  google_vision : any
+  google_ml_vision  : any
 #  fijkplayer:
 #  better_player: any
 
