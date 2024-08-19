@@ -23,13 +23,13 @@ class _IpCameraViewState extends State<IpCameraView> {
   void initState() {
     super.initState();
     initializePlayer();
-    // startFrameAnalysis();
+    startFrameAnalysis();
   }
 
   void initializePlayer() {
     String username = 'admin';
     String password = 'admin@123';
-    String ipAddress = '192.168.2.87';
+    String ipAddress = '192.168.2.86';
     String rtspUrl = 'rtsp://$username:$password@$ipAddress/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif';
 
     _vlcPlayerController = VlcPlayerController.network(
@@ -56,7 +56,6 @@ class _IpCameraViewState extends State<IpCameraView> {
       ),
     );
   }
-/*
 
   void startFrameAnalysis() {
     Future.delayed(Duration(seconds: 1), analyzeFrame);
@@ -92,6 +91,9 @@ class _IpCameraViewState extends State<IpCameraView> {
     // Perform OCR on the asset image (you can use a similar method as in InbuiltCameraView)
     String assetOcrText = await performOcrOnAssetImage();
 
+    print('ipCameraOcrText: ${ipCameraOcrText}');
+    print('assetOcrText: ${assetOcrText}');
+
     // Update OCR result in the controller
     cameraController.updateOcrResult(ipCameraOcrText);
 
@@ -123,7 +125,6 @@ class _IpCameraViewState extends State<IpCameraView> {
     return data.buffer.asUint8List();
   }
 
-*/
 
   @override
   Widget build(BuildContext context) {

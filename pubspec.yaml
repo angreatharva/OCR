@@ -36,15 +36,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   get: 4.6.6
-  google_mlkit_text_recognition: 0.13.0
+  google_mlkit_text_recognition: ^0.5.0
   flutter_ffmpeg: any
   camera: 0.11.0+1
   path_provider: 2.1.4
-  image: ^3.0.2
+  image: ^3.3.0
   string_similarity: any
   video_player: any
   http: any
-  flutter_vlc_player: any
+  flutter_vlc_player: ^7.2.0
   flutter_easyloading: any
   google_mlkit_document_scanner: any
   opencv_dart : any
