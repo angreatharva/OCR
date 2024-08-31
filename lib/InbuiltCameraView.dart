@@ -224,7 +224,12 @@ class _InbuiltCameraViewState extends State<InbuiltCameraView> {
           ),
           Obx(() {
             if (cameraController.tenBookScanned.value) {
-              return Text('10 Scanned');
+              return Column(
+                children: [
+                  Text('10 Scanned'),
+                  Text('All Scanned'),
+                ],
+              );
             } else if (cameraController.nineBookScanned.value) {
               return Text('9 Scanned');
             } else if (cameraController.eightBookScanned.value) {
