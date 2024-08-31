@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'InbuiltCameraView.dart';
 import 'IpCameraView.dart';
 
 void main() {
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: IpCameraView(),
+      home: InbuiltCameraView(),
       // home: InbuiltCameraView(),
       builder: EasyLoading.init(),
     );
