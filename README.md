@@ -1,4 +1,4 @@
-# rtsp_ocr
+# rtsp_ocr in Flutter Application
 
 A new Flutter project.
 
